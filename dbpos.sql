@@ -16,36 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `detail_pembelian`
---
-
-DROP TABLE IF EXISTS `detail_pembelian`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `detail_pembelian` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `qty` int(11) DEFAULT NULL,
-  `harga` double DEFAULT NULL,
-  `produk_id` int(11) NOT NULL,
-  `pembelian_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_pembelian_produk1_idx` (`produk_id`),
-  KEY `fk_pembelian_master_pembelian1_idx` (`pembelian_id`),
-  CONSTRAINT `fk_pembelian_master_pembelian1` FOREIGN KEY (`pembelian_id`) REFERENCES `pembelian` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pembelian_produk1` FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `detail_pembelian`
---
-
-LOCK TABLES `detail_pembelian` WRITE;
-/*!40000 ALTER TABLE `detail_pembelian` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detail_pembelian` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `jenis_produk`
 --
 
@@ -172,10 +142,17 @@ CREATE TABLE `pembelian` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tanggal` varchar(45) DEFAULT NULL,
   `nomor` varchar(10) DEFAULT NULL,
-  `total` double DEFAULT NULL,
+  `produk_id` int(11) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL,
+  `harga` double DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `nomor_UNIQUE` (`nomor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `nomor_UNIQUE` (`nomor`),
+  KEY `produk_id` (`produk_id`),
+  KEY `vendor_id` (`vendor_id`),
+  CONSTRAINT `pembelian_ibfk_1` FOREIGN KEY (`produk_id`) REFERENCES `produk` (`id`),
+  CONSTRAINT `pembelian_ibfk_2` FOREIGN KEY (`vendor_id`) REFERENCES `vendor` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,6 +161,7 @@ CREATE TABLE `pembelian` (
 
 LOCK TABLES `pembelian` WRITE;
 /*!40000 ALTER TABLE `pembelian` DISABLE KEYS */;
+INSERT INTO `pembelian` VALUES (1,'2019-10-10','P001',1,2,3500000,1),(2,'2019-11-20','P002',2,5,5500000,2),(3,'2019-12-12','P003',2,5,5400000,1),(4,'2020-01-20','P004',7,200,1800,3),(5,'2020-01-20','P005',5,100,2300,3);
 /*!40000 ALTER TABLE `pembelian` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -278,6 +256,34 @@ LOCK TABLES `produk` WRITE;
 INSERT INTO `produk` VALUES (1,'TV01','Televisi 21 inch',3500000,5040000,5,2,1),(2,'TV02','Televisi 40 inch',5500000,7440000,4,2,1),(3,'K001','Kulkas 2 pintu',3500000,4680000,6,2,1),(4,'M001','Meja Makan',500000,600000,4,3,2),(5,'TK01','Teh Kotak',3000,3500,6,10,4),(6,'PC01','PC Desktop HP',7000000,9600000,9,2,5),(7,'TB01','Teh Botol',2000,2500,53,10,4),(8,'AC01','Notebook Acer',8000000,10800000,7,2,5),(9,'LN01','Notebook Lenovo',9000000,12000000,9,2,5),(10,'L004','Laptop HP',12000000,13000000,20,5,5);
 /*!40000 ALTER TABLE `produk` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `vendor`
+--
+
+DROP TABLE IF EXISTS `vendor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vendor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nomor` varchar(4) NOT NULL,
+  `nama` varchar(40) NOT NULL,
+  `kota` varchar(30) DEFAULT NULL,
+  `kontak` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nomor` (`nomor`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vendor`
+--
+
+LOCK TABLES `vendor` WRITE;
+/*!40000 ALTER TABLE `vendor` DISABLE KEYS */;
+INSERT INTO `vendor` VALUES (1,'V001','PT Guna Samudra','Surabaya','Ali Nurdin'),(2,'V002','PT Pondok C9','Depok','Putri Ramadhani'),(3,'V003','CV Jaya Raya Semesta','Jakarta','Dwi Rahayu'),(4,'V004','PT Lekulo X','Kebumen','Mbambang G'),(5,'V005','PT IT Prima','Jakarta','David W');
+/*!40000 ALTER TABLE `vendor` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -288,4 +294,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-03  7:12:01
+-- Dump completed on 2021-03-19  0:42:31
